@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title> 라온계산기 </title >
+</head>
+
+<body>
+  <!-- DO NOT USE HTML -->
+</body>
+
+<script>
+  var flag = 0;
+  
+  function cal() { // = 입력시 계산
+  }
+
+  function SACHIC(thing) { // 나머지 사칙연산
+    if((screen.innerText == '0' && thing == '-') || screen.innerText == '-'){
+      screen.innerText = '-';
+      input = '-';
+      flag = 1;
+      return 0;
+    }
+
+    if(flag == 1){ // 부호만 바꿀 때
+      sachic[sachic.length-1] = thing;
+      full.innerText = full.innerText.substring(0, full.innerText.length-1);
+      full.innerText += thing;
+      input = '';
+    }
+    else{ // 부호가 아니고 새로 넣을 때
+      if(screen.innerText[screen.innerText.length-1]=='.'){
+        screen.innerText = screen.innerText.replace('.','');
+      }
+      numbers.push(screen.innerText);
+      sachic.push(thing);
+      full.innerText += screen.innerText+thing;
+      input = '';
+      flag = 1;
+    }
+
+    if(numbers.length>=2){ // 집어넣었는데 넘버가 두개 이상일 때 = 계산
+      var sachic_result;
+      const first = numbers[0];
+      const second = numbers[1];
+      numbers = new Array();
+      const first_s = sachic[0];
+      const second_s = sachic[1];
+      sachic = new Array();
+      switch(first_s){
+        case '+':
+          sachic_result = +(parseFloat(first) + parseFloat(second)).toFixed(12);
+          break;
+        case '-':
+          sachic_result = +(parseFloat(first) - parseFloat(second)).toFixed(12);
+          break;
+        case '*':
+          sachic_result = +(parseFloat(first) * parseFloat(second)).toFixed(12);
+          break;
+        case '/':
+          sachic_result = +(parseFloat(first) / parseFloat(second)).toFixed(12);
+          break;
+        default:
+          alert('switch error');
+      }
+      screen.innerText = sachic_result;
+      numbers.push(sachic_result);
+      sachic.push(second_s);
+      flag = 1;
+      num = '';
+    } 
+
+  }
+  
+  function CE() { // 현재 숫자만 0으로
+    screen.innerText = '0';
+    input = '';
+  }
+
+  var num;
+  function C() { // 가장 마지막 숫자 지우기
+    if(screen.innerText.length <= 1){
+      screen.innerText = '0';
+      input = '';
+    }
+    else{
+      num = screen.innerText;
+      num = num.substring(0, num.length-1);
+      screen.innerText = num;
+      input = num;
+      flag = 0;
+    }
+  }
+
+  function AC(){ // 현재 숫자 0으로 + 저장결과 초기화
+    numbers = new Array();
+    sachic = new Array();
+    screen.innerText = '0';
+    input = '';
+    full.innerText = '☞ ';
+  }
+
+  function PM(){ // 현재 숫자 음수로
+    if(screen.textContent!=0){
+      screen.innerText *= -1
+      input = screen.innerText
+      flag = 0;
+    }
+  }
+
+  // 계산 화면
+  var numbers = new Array();
+  var sachic = new Array();
+  
+  var full = document.createElement('p');
+  full.innerText = '☞ ';
+  document.body.appendChild(full);
+  
+  var screen = document.createElement('h1');
+  screen.id = 'screen';
+  screen.innerText = '0';
+  document.body.appendChild(screen);
+
+  // 임시틀
+  var div = document.createElement('div');
+  var div2 = document.createElement('div'); 
+  document.body.appendChild(div);
+  document.body.appendChild(div2);
+
+  // 사칙연산 버튼
+  var plus = document.createElement('button');
+  plus.innerText = '+';
+  div.appendChild(plus); 
+  plus.addEventListener('click', function(){ SACHIC(plus.textContent) });
+
+  var minus = document.createElement('button');
+  minus.innerText = '-';
+  div.appendChild(minus);
+  minus.addEventListener('click', function(){ SACHIC(minus.textContent) });
+
+  var divide = document.createElement('button');
+  divide.innerText = '/';
+  div.appendChild(divide); 
+  divide.addEventListener('click', function(){ SACHIC(divide.textContent) });
+
+  var multiply = document.createElement('button');
+  multiply.innerText = '*';
+  div.appendChild(multiply);
+  multiply.addEventListener('click', function(){ SACHIC(multiply.textContent) });
+
+  var equal = document.createElement('button');
+  equal.innerText = '=';
+  div.appendChild(equal);
+  equal.addEventListener('click',cal)
+
+  // C 버튼
+  var button_C = document.createElement('button');
+  button_C.innerText = 'C';
+  div2.appendChild(button_C);
+  button_C.addEventListener('click', C)
+
+  // CE 버튼
+  var button_CE = document.createElement('button');
+  button_CE.innerText = 'CE';
+  div2.appendChild(button_CE);
+  button_CE.addEventListener('click', CE)
+
+  // AC 버튼
+  var button_AC = document.createElement('button');
+  button_AC.innerText = 'AC';
+  div2.appendChild(button_AC);
+  button_AC.addEventListener('click', AC)
+
+  // 음수 버튼
+  var button_pm = document.createElement('button');
+  button_pm.innerText = '±';
+  div2.appendChild(button_pm);
+  button_pm.addEventListener('click', PM)
+  
+  var input = '';
+  // 키보드 이벤트
+  window.onkeydown = function() {
+    if(((event.keyCode>=48) && (event.keyCode<=57)) || ((event.keyCode>=96) && (event.keyCode<=105))){ // 48~57, 96~105
+      if(flag === 1){
+        screen.innerText = '';
+        flag = 0;
+      }
+      key = event.keyCode;
+      if (key == 96){
+        key = 48;
+      }
+      else if(key>=97){
+        key -= 48;
+      }
+      input += String.fromCharCode(key);     
+      screen.innerText = input;
+    }
+    else if(event.keyCode==190 || event.keyCode==110){
+      if(screen.innerText.split('.').length-1 == 0){
+        if(input==''){
+          input=0
+        }
+        input += '.';     
+        screen.innerText = input;
+      }
+    }
+    else if(event.keyCode==8){
+      C();
+    }
+    else if(event.keyCode==27){
+      AC();
+    }
+    else if(event.keyCode==107){
+      SACHIC(plus.textContent);
+    }
+    else if(event.keyCode==109){
+      SACHIC(minus.textContent);
+    }
+    else if(event.keyCode==106){
+      SACHIC(multiply.textContent);
+    }
+    else if(event.keyCode==111){
+      SACHIC(divide.textContent);
+    }
+    else if(event.keyCode==13){
+      cal();
+    }
+  }
+
+</script>
+
+</html>
