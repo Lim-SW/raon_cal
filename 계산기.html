@@ -21,25 +21,42 @@
       // 아무것도 안함
     }
     else if(flag == 1){
-      //alert(1 + '\n' + flag + '\n' + numbers + '\n' + sachic + '\n' + calflag)
+      alert(1 + '\n' + flag + '\n' + numbers + '\n' + sachic + '\n' + calflag)
       var cal_result;
       switch(last_s){
         case '+':
-          cal_result = +(parseFloat(numbers) + parseFloat(last_n)).toFixed(12);
+          cal_result = +(parseFloat(numbers[0]) + parseFloat(last_n)).toFixed(12);
           break;
         case '-':
-          cal_result = +(parseFloat(numbers) - parseFloat(last_n)).toFixed(12);
+          cal_result = +(parseFloat(numbers[0]) - parseFloat(last_n)).toFixed(12);
           break;
         case '*':
-          cal_result = +(parseFloat(numbers) * parseFloat(last_n)).toFixed(12);
+          cal_result = +(parseFloat(numbers[0]) * parseFloat(last_n)).toFixed(12);
           break;
         case '/':
-          cal_result = +(parseFloat(numbers) / parseFloat(last_n)).toFixed(12);
+          cal_result = +(parseFloat(numbers[0]) / parseFloat(last_n)).toFixed(12);
           break;
         default:
           alert('switch error1');
       }
 
+      if(calflag == 0){
+        const line1 = document.createElement('p');
+        line1.innerText = full.innerText + last_n;
+        const line2 = document.createElement('h3');
+        line2.innerText = cal_result;
+        div3.prepend(line2);
+        div3.prepend(line1);
+      }
+      else{
+        const line1 = document.createElement('p');
+        line1.innerText = '☞'+numbers[0] + last_s + last_n;
+        const line2 = document.createElement('h3');
+        line2.innerText = cal_result;
+        div3.prepend(line2);
+        div3.prepend(line1);
+      }
+      
       screen.innerText = cal_result;
       full.innerText = '☞'+numbers[0] + last_s + last_n;
       numbers = new Array();
@@ -52,21 +69,22 @@
     }
     else{
       //alert(2 + '\n' + flag + '\n' + numbers + '\n' + sachic + '\n' + calflag)
-      last_n = screen.innerText;
-      last_s = sachic[0];
+      //last_n = screen.innerText;
+      //last_s = sachic[0];
+      //alert(last_n +'\n'+ last_s)
       var cal_result;
-      switch(sachic[0]){
+      switch(last_s){
         case '+':
-          cal_result = +(parseFloat(numbers[0]) + parseFloat(screen.innerText)).toFixed(12);
+          cal_result = +(parseFloat(numbers[0]) + parseFloat(last_n)).toFixed(12);
           break;
         case '-':
-          cal_result = +(parseFloat(numbers[0]) - parseFloat(screen.innerText)).toFixed(12);
+          cal_result = +(parseFloat(numbers[0]) - parseFloat(last_n)).toFixed(12);
           break;
         case '*':
-          cal_result = +(parseFloat(numbers[0]) * parseFloat(screen.innerText)).toFixed(12);
+          cal_result = +(parseFloat(numbers[0]) * parseFloat(last_n)).toFixed(12);
           break;
         case '/':
-          cal_result = +(parseFloat(numbers[0]) / parseFloat(screen.innerText)).toFixed(12);
+          cal_result = +(parseFloat(numbers[0]) / parseFloat(last_n)).toFixed(12);
           break;
         default:
           alert('switch error2');
@@ -76,18 +94,28 @@
       line1.innerText = full.innerText + screen.innerText;
       const line2 = document.createElement('h3');
       line2.innerText = cal_result;
+
+      screen.innerText = cal_result;
+      if(calflag == 1){
+        full.innerText = '☞'+numbers[0] + last_s + last_n;
+        line1.innerText = full.innerText;
+      }
+      else{
+        full.innerText = '☞';
+      }
+      
       div3.prepend(line2);
       div3.prepend(line1);
 
-      screen.innerText = cal_result;
-      full.innerText = '☞';
       numbers = new Array();
       numbers.push(cal_result);
       sachic = new Array();
+      sachic.push(last_s);
       input = '';
       num = '';
       flag = 0;
       calflag = 1;
+      //last_s = sachic[0];
       //alert(flag + '\n' + numbers + '\n' + sachic + '\n' + calflag)
     }
   }
@@ -101,16 +129,17 @@
     }
 
     if(flag == 1 && screen.innerText != 0 && calflag != 1 && sachic.length !=0 ){ // 부호만 바꿀 때
-      alert(1);
+      //alert(1);
       sachic[sachic.length-1] = thing;
       full.innerText = full.innerText.substring(0, full.innerText.length-1);
       full.innerText += thing;
       input = '';
+      last_s = thing;
     }
 
     else if(calflag == 1){ // cal 돌고 왔을때
-      alert(2);
-      alert(flag + '\n' + numbers + '\n' + sachic + '\n' + calflag);
+      //alert(2);
+      //alert(flag + '\n' + numbers + '\n' + sachic + '\n' + calflag);
       if(numbers.length == 0 && sachic.length ==0){
         // 아무것도 안함
       }
@@ -127,22 +156,24 @@
         input = '';
         calflag = 0;
         flag = 1;
+        last_s = thing;
       }
 
     }
 
     else if(flag == 1 && numbers.length != 0){ // 계산하다가 = 입력 후
-      alert(3);
+      //alert(3);
       full.innerText += screen.innerText+thing;
       //numbers.push(screen.innerText);
       sachic.push(thing);
       input = '';
       flag = 1;
+      last_s = thing;
       //alert(flag + '\n' + numbers + '\n' + sachic + '\n' + calflag)
     }
 
     else{ // 부호가 아니고 넣을 때
-      alert(4);
+      //alert(4);
       if(screen.innerText[screen.innerText.length-1]=='.'){
         screen.innerText = screen.innerText.replace('.','');
       }
@@ -150,7 +181,7 @@
         numbers[numbers.length-1] = screen.innerText;
         sachic.push(thing);
         full.innerText += screen.innerText+thing;
-        last_n = screen.innerText;
+        //last_n = screen.innerText;
         last_s = thing;
         input = '';
         flag = 1;
@@ -159,7 +190,7 @@
         numbers.push(screen.innerText);
         sachic.push(thing);
         full.innerText += screen.innerText+thing;
-        last_n = screen.innerText;
+        //last_n = screen.innerText;
         last_s = thing;
         input = '';
         flag = 1;
@@ -167,7 +198,7 @@
     }
 
     if(numbers.length>=2){ // 집어넣었는데 넘버가 두개 이상일 때 = 계산
-      alert(5);
+      //alert(5);
       //alert(3 + '\n' + flag + '\n' + numbers + '\n' + sachic + '\n' + calflag)
       var sachic_result;
       const first = numbers[0];
@@ -197,10 +228,11 @@
       sachic.push(second_s);
       flag = 1;
       num = '';
+      last_s = thing;
     }
 
     if(pmflag == 1 && numbers.length == 0){ // 음수 누르고 바로계산 할 때
-      alert(6);
+      //alert(6);
       //alert(flag + '\n' + numbers + '\n' + sachic + '\n' + calflag)
       var sachic_result;
       const first = numbers[0];
@@ -230,6 +262,7 @@
       flag = 1;
       num = '';
       pmflag=0;
+      last_s = thing;
     }
   }
   
@@ -281,6 +314,7 @@
       screen.innerText *= -1
       input = screen.innerText;
       flag = 0;
+      last_n = screen.innerText;
       pmflag = 1;
     }
   }
@@ -382,6 +416,7 @@
       }
       input += String.fromCharCode(key);     
       screen.innerText = input;
+      last_n = screen.innerText;
     }
     else if(event.keyCode==190 || event.keyCode==110){
       if(screen.innerText.split('.').length-1 == 0){
