@@ -10,10 +10,16 @@
 </body>
 
 <script>
-  var flag = 0;
+  // local 저장해야할 전역변수들
+  var flag = 0; 
+  var calflag = 0;
   var last_n = 0;
   var last_s = '';
-  var calflag = 0;
+  var num;
+  var pmflag=0;
+  var input = '';
+  var numbers = new Array();
+  // 여기에 screen.innerText / full.innerText / div3의 child들
 
   function cal() { // = 입력시 계산
     //alert(flag + '\n' + numbers + '\n' + sachic)
@@ -21,7 +27,7 @@
       // 아무것도 안함
     }
     else if(flag == 1){
-      alert(1 + '\n' + flag + '\n' + numbers + '\n' + sachic + '\n' + calflag)
+      //alert(1 + '\n' + flag + '\n' + numbers + '\n' + sachic + '\n' + calflag)
       var cal_result;
       switch(last_s){
         case '+':
@@ -45,16 +51,16 @@
         line1.innerText = full.innerText + last_n;
         const line2 = document.createElement('h3');
         line2.innerText = cal_result;
-        div3.prepend(line2);
-        div3.prepend(line1);
+        div4.prepend(line2);
+        div4.prepend(line1);
       }
       else{
         const line1 = document.createElement('p');
         line1.innerText = '☞'+numbers[0] + last_s + last_n;
         const line2 = document.createElement('h3');
         line2.innerText = cal_result;
-        div3.prepend(line2);
-        div3.prepend(line1);
+        div4.prepend(line2);
+        div4.prepend(line1);
       }
       
       screen.innerText = cal_result;
@@ -104,8 +110,8 @@
         full.innerText = '☞';
       }
       
-      div3.prepend(line2);
-      div3.prepend(line1);
+      div4.prepend(line2);
+      div4.prepend(line1);
 
       numbers = new Array();
       numbers.push(cal_result);
@@ -130,7 +136,7 @@
 
     if(flag == 1 && screen.innerText != 0 && calflag != 1 && sachic.length !=0 ){ // 부호만 바꿀 때
       //alert(1);
-      sachic[sachic.length-1] = thing;
+      //sachic[sachic.length-1] = thing;
       full.innerText = full.innerText.substring(0, full.innerText.length-1);
       full.innerText += thing;
       input = '';
@@ -204,10 +210,10 @@
       const first = numbers[0];
       const second = numbers[1];
       numbers = new Array();
-      const first_s = sachic[0];
-      const second_s = sachic[1];
+      //const first_s = sachic[0];
+      //const second_s = sachic[1];
       sachic = new Array();
-      switch(first_s){
+      switch(last_s){
         case '+':
           sachic_result = +(parseFloat(first) + parseFloat(second)).toFixed(12);
           break;
@@ -225,7 +231,7 @@
       }
       screen.innerText = sachic_result;
       numbers.push(sachic_result);
-      sachic.push(second_s);
+      //sachic.push(second_s);
       flag = 1;
       num = '';
       last_s = thing;
@@ -238,7 +244,7 @@
       const first = numbers[0];
       const second = screen.innerText;
       numbers = new Array();
-      const first_s = sachic[0];
+      const first_s = last_s;
       sachic = new Array();
       switch(first_s){
         case '+':
@@ -258,7 +264,7 @@
       }
       screen.innerText = sachic_result;
       numbers.push(sachic_result);
-      sachic.push(first_s);
+      //sachic.push(first_s);
       flag = 1;
       num = '';
       pmflag=0;
@@ -278,7 +284,6 @@
     pmflag = 0;
   }
 
-  var num;
   function C() { // 가장 마지막 숫자 지우기
     if(screen.innerText.length <= 1){
       screen.innerText = '0';
@@ -303,12 +308,11 @@
     flag = 0;
     pmflag = 0;
 
-    while(div3.hasChildNodes()){
-      div3.removeChild(div3.firstChild);
+    while(div4.hasChildNodes()){
+      div4.removeChild(div4.firstChild);
     }
   }
 
-  var pmflag=0;
   function PM(){ // 현재 숫자 음수로
     if(screen.textContent!=0){
       screen.innerText *= -1
@@ -319,10 +323,22 @@
     }
   }
 
+  function SAVE(){
+    localStorage.setItem('flag', flag);
+    localStorage.setItem('calflag', calflag);
+    localStorage.setItem('last_n', last_n);
+    localStorage.setItem('last_s', last_s);
+    localStorage.setItem('num', num);
+    localStorage.setItem('pmflag', pmflag);
+    localStorage.setItem('input', input);
+    localStorage.setItem('numbers', JSON.stringify(numbers));
+
+    localStorage.setItem('screen', screen.innerText);
+    localStorage.setItem('full', full.innerText);
+    alert('done')
+  }
+
   // 계산 화면
-  var numbers = new Array();
-  var sachic = new Array();
-  
   var full = document.createElement('p');
   full.innerText = '☞ ';
   document.body.appendChild(full);
@@ -340,7 +356,9 @@
 
   //계산저장공간
   var div3 =  document.createElement('div');
-  document.body.appendChild(div3);
+  document.body.appendChild(div3);  
+  var div4 =  document.createElement('div');
+  document.body.appendChild(div4);
 
   // 사칙연산 버튼
   var plus = document.createElement('button');
@@ -391,8 +409,13 @@
   button_pm.innerText = '±';
   div2.appendChild(button_pm);
   button_pm.addEventListener('click', PM)
+
+  // 저장 버튼
+  var button_save = document.createElement('button');
+  button_save.innerText = '저장하기';
+  div3.appendChild(button_save);
+  button_save.addEventListener('click', SAVE)
   
-  var input = '';
   // 키보드 이벤트
   window.onkeydown = function() {
     if(((event.keyCode>=48) && (event.keyCode<=57)) || ((event.keyCode>=96) && (event.keyCode<=105))){ // 48~57, 96~105
@@ -448,6 +471,68 @@
     else if(event.keyCode==13){
       cal();
     }
+  }
+
+  // 저장되어있으면 불러오기
+  if(localStorage.getItem('flag')){
+    flag = localStorage.getItem('flag');
+  }
+  else{
+    flag = '0';
+  }
+  if(localStorage.getItem('calflag')){
+    calflag = localStorage.getItem('calflag');
+  }
+  else{
+    calflag = '0';
+  }
+  if(localStorage.getItem('last_n')){
+    last_n = localStorage.getItem('last_n');
+  }
+  else{
+    last_n = '0';
+  }
+  if(localStorage.getItem('last_s')){
+    last_s = localStorage.getItem('last_s');
+  }
+  else{
+    last_s = '0';
+  }
+  if(localStorage.getItem('num')){
+    num = localStorage.getItem('num');
+  }
+  else{
+   num = '';
+  }
+  if(localStorage.getItem('pmflag')){
+    pmflag = localStorage.getItem('pmflag');
+  }
+  else{
+    pmflag = '0';
+  }
+  if(localStorage.getItem('input')){
+    input = localStorage.getItem('input');
+  }
+  else{
+    input = '';
+  }
+  if(localStorage.getItem('numbers')){
+    numbers = JSON.parse(localStrage.getItem('numbers'));
+  }
+  else{
+    numbers = new Array;
+  }
+  if(localStorage.getItem('screen')){
+    screen.innerText = localStorage.getItem('screen');
+  }
+  else{
+    screen.innerText = '0';
+  }
+  if(localStorage.getItem('full')){
+    full.innerText = localStorage.getItem('full');
+  }
+  else{
+    full.innerText = '☞ ';
   }
 
 </script>
