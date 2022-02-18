@@ -23,7 +23,7 @@
 
   function cal() { // = 입력시 계산
     //alert(flag + '\n' + numbers + '\n' + sachic)
-    if(numbers.length == 0 && sachic.length ==0){
+    if(numbers.length == 0){
       // 아무것도 안함
     }
     else if(flag == 1){
@@ -47,18 +47,22 @@
       }
 
       if(calflag == 0){
-        const line1 = document.createElement('p');
+        const line1 = document.createElement('h4');
         line1.innerText = full.innerText + last_n;
-        const line2 = document.createElement('h3');
+        const line2 = document.createElement('h2');
         line2.innerText = cal_result;
+        line1.className = 'sik';
+        line2.className = 'dap';
         div4.prepend(line2);
         div4.prepend(line1);
       }
       else{
-        const line1 = document.createElement('p');
+        const line1 = document.createElement('h4');
         line1.innerText = '☞'+numbers[0] + last_s + last_n;
-        const line2 = document.createElement('h3');
+        const line2 = document.createElement('h2');
         line2.innerText = cal_result;
+        line1.className = 'sik';
+        line2.className = 'dap';
         div4.prepend(line2);
         div4.prepend(line1);
       }
@@ -96,9 +100,9 @@
           alert('switch error2');
       }
       
-      const line1 = document.createElement('p');
+      const line1 = document.createElement('h4');
       line1.innerText = full.innerText + screen.innerText;
-      const line2 = document.createElement('h3');
+      const line2 = document.createElement('h2');
       line2.innerText = cal_result;
 
       screen.innerText = cal_result;
@@ -109,14 +113,13 @@
       else{
         full.innerText = '☞';
       }
-      
+      line1.className = 'sik';
+      line2.className = 'dap';
       div4.prepend(line2);
       div4.prepend(line1);
 
       numbers = new Array();
       numbers.push(cal_result);
-      sachic = new Array();
-      sachic.push(last_s);
       input = '';
       num = '';
       flag = 0;
@@ -127,6 +130,7 @@
   }
 
   function SACHIC(thing) { // 나머지 사칙연산
+    //alert(flag + '\n' + numbers + '\n' + thing + '\n' + calflag + '\n' + pmflag)
     if((screen.innerText == '0' && thing == '-') || screen.innerText == '-'){ // 맨 처음 음수
       screen.innerText = '-';
       input = '-';
@@ -134,8 +138,8 @@
       return 0;
     }
 
-    if(flag == 1 && screen.innerText != 0 && calflag != 1 && sachic.length !=0 ){ // 부호만 바꿀 때
-      //alert(1);
+    if(flag == 1 && screen.innerText != 0 && calflag != 1){ // 부호만 바꿀 때
+      alert(1);
       //sachic[sachic.length-1] = thing;
       full.innerText = full.innerText.substring(0, full.innerText.length-1);
       full.innerText += thing;
@@ -144,18 +148,20 @@
     }
 
     else if(calflag == 1){ // cal 돌고 왔을때
-      //alert(2);
+      alert(2);
       //alert(flag + '\n' + numbers + '\n' + sachic + '\n' + calflag);
-      if(numbers.length == 0 && sachic.length ==0){
+      if(numbers.length == 0){
         // 아무것도 안함
       }
       else{
-        sachic.push(thing);
         //full.innerText = full.innerText.substring(0, full.innerText.length-1);
         if(pmflag == 1){
           numbers[0] = screen.innerText;
           //alert(numbers[0]);
           pmflag = 0;
+        }
+        if(numbers[0]!=screen.innerText){
+          numbers[0] = screen.innerText;
         }
         full.innerText = '☞'+numbers[0];
         full.innerText += thing;
@@ -168,10 +174,9 @@
     }
 
     else if(flag == 1 && numbers.length != 0){ // 계산하다가 = 입력 후
-      //alert(3);
+      alert(3);
       full.innerText += screen.innerText+thing;
       //numbers.push(screen.innerText);
-      sachic.push(thing);
       input = '';
       flag = 1;
       last_s = thing;
@@ -179,22 +184,30 @@
     }
 
     else{ // 부호가 아니고 넣을 때
-      //alert(4);
+      alert(4);
       if(screen.innerText[screen.innerText.length-1]=='.'){
         screen.innerText = screen.innerText.replace('.','');
       }
       if(pmflag==1 && numbers.length != 0){
-        numbers[numbers.length-1] = screen.innerText;
-        sachic.push(thing);
-        full.innerText += screen.innerText+thing;
-        //last_n = screen.innerText;
-        last_s = thing;
-        input = '';
-        flag = 1;
+        if(numbers.length == 0) {
+          numbers[numbers.length-1] = screen.innerText;
+          full.innerText += screen.innerText+thing;
+          //last_n = screen.innerText;
+          last_s = thing;
+          input = '';
+          flag = 1;
+        }
+        else{
+          numbers.push(screen.innerText);
+          full.innerText += screen.innerText+thing;
+          //last_n = screen.innerText;
+          last_s = thing;
+          input = '';
+          flag = 1;
+        }
       }
       else{
         numbers.push(screen.innerText);
-        sachic.push(thing);
         full.innerText += screen.innerText+thing;
         //last_n = screen.innerText;
         last_s = thing;
@@ -204,7 +217,7 @@
     }
 
     if(numbers.length>=2){ // 집어넣었는데 넘버가 두개 이상일 때 = 계산
-      //alert(5);
+      alert(5);
       //alert(3 + '\n' + flag + '\n' + numbers + '\n' + sachic + '\n' + calflag)
       var sachic_result;
       const first = numbers[0];
@@ -212,7 +225,6 @@
       numbers = new Array();
       //const first_s = sachic[0];
       //const second_s = sachic[1];
-      sachic = new Array();
       switch(last_s){
         case '+':
           sachic_result = +(parseFloat(first) + parseFloat(second)).toFixed(12);
@@ -238,14 +250,13 @@
     }
 
     if(pmflag == 1 && numbers.length == 0){ // 음수 누르고 바로계산 할 때
-      //alert(6);
+      alert(6);
       //alert(flag + '\n' + numbers + '\n' + sachic + '\n' + calflag)
       var sachic_result;
       const first = numbers[0];
       const second = screen.innerText;
       numbers = new Array();
       const first_s = last_s;
-      sachic = new Array();
       switch(first_s){
         case '+':
           sachic_result = +(parseFloat(first) + parseFloat(second)).toFixed(12);
@@ -274,7 +285,6 @@
   
   function CE() { // 현재 숫자 0으로
     numbers = new Array();
-    sachic = new Array();
     screen.innerText = '0';
     input = '';
     num = 0;
@@ -300,7 +310,6 @@
 
   function AC(){ // 현재 숫자 0으로 + 저장결과 초기화
     numbers = new Array();
-    sachic = new Array();
     screen.innerText = '0';
     input = '';
     full.innerText = '☞ ';
@@ -335,11 +344,32 @@
 
     localStorage.setItem('screen', screen.innerText);
     localStorage.setItem('full', full.innerText);
-    alert('done')
+    //var log = document.getElementsByClassName('log')[0].innerText;
+    var dap = document.getElementsByTagName('h2');
+    var sik = document.getElementsByTagName('h4');
+    var dap_arr = new Array();
+    var sik_arr = new Array();
+
+    for(var i=0;i<dap.length;i++){
+      //console.log(sik[i].innerText);
+      //console.log(dap[i].innerText);
+      dap_arr.push(dap[i].innerText);
+      sik_arr.push(sik[i].innerText);
+    }
+    //console.log(dap_arr.length)
+    localStorage.setItem('dap', JSON.stringify(dap_arr));
+    localStorage.setItem('sik', JSON.stringify(sik_arr))
+    alert('저장완료!')
+  }
+
+  function UNSAVE(){
+    localStorage.clear();
+    AC();
+    alert('초기화완료!')
   }
 
   // 계산 화면
-  var full = document.createElement('p');
+  var full = document.createElement('h3');
   full.innerText = '☞ ';
   document.body.appendChild(full);
   
@@ -358,6 +388,7 @@
   var div3 =  document.createElement('div');
   document.body.appendChild(div3);  
   var div4 =  document.createElement('div');
+  div4.className = 'log';
   document.body.appendChild(div4);
 
   // 사칙연산 버튼
@@ -415,6 +446,11 @@
   button_save.innerText = '저장하기';
   div3.appendChild(button_save);
   button_save.addEventListener('click', SAVE)
+
+  var button_unsave = document.createElement('button');
+  button_unsave.innerText = '저장삭제';
+  div3.appendChild(button_unsave);
+  button_unsave.addEventListener('click', UNSAVE)
   
   // 키보드 이벤트
   window.onkeydown = function() {
@@ -424,9 +460,9 @@
         flag = 0;
       }
       if(calflag == 1){
+        full.innerText = '☞';
         screen.innerText = '';
         numbers = new Array();
-        sachic = new Array();
         flag = 0;
         calflag = 0;
       }
@@ -517,7 +553,7 @@
     input = '';
   }
   if(localStorage.getItem('numbers')){
-    numbers = JSON.parse(localStrage.getItem('numbers'));
+    numbers = JSON.parse(localStorage.getItem('numbers'));
   }
   else{
     numbers = new Array;
@@ -534,6 +570,25 @@
   else{
     full.innerText = '☞ ';
   }
+  if(localStorage.getItem('dap') || localStorage.getItem('sik')){
+    var dap = JSON.parse(localStorage.getItem('dap'));
+    var sik = JSON.parse(localStorage.getItem('sik'));
+    for(var i=dap.length-1;i>=0;i--){
+      //console.log(dap.length, i)
+      var log1 = document.createElement('h2');
+      log1.innerText = dap[i];
+      div4.prepend(log1);
+      var log2 = document.createElement('h4');
+      log2.innerText = sik[i];
+      div4.prepend(log2);
+    }
+  }
+  else{
+    log = document.createElement('p');
+    log.innerText = '';
+    div4.appendChild(log);
+  }
+  
 
 </script>
 
