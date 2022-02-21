@@ -3,12 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <title>메인</title>
-    <script src="계산기.js"></script>
+    <script type="text/javascript" src="계산기.js"></script>
+    
+    <style>
+        #div,#div2,#div3{ display:list-item; border: 2px solid gray; text-align: center;}
+        #div0{border: 2px solid gray; text-align: left;}
+        #div4{border: 2px solid gray; text-align: left; height: 10cm; overflow:auto;}
+        #screen{text-align: right;}
+        #container{position:absolute; width: 10cm;}
+    </style>
 </head>
 <body>
 </body>
 
 <script>
-        
+
+    var n = 0;
+    
+    var div1 = document.createElement('div');
+    document.body.appendChild(div1);
+
+    var cal_list = document.createElement('div');
+    cal_list.id = 'cal_list';
+    document.body.appendChild(cal_list);
+
+    var but = document.createElement('button');
+    but.innerText = 'Create RaonWizCal';
+    but.addEventListener('click', function(){
+        var lsw = new LSWCal(n);
+        lsw.init();
+        n += 1;   
+    });
+
+    var remove = document.createElement('button');
+    remove.innerText = 'Remove RaonWizCal';
+    remove.addEventListener('click', function(){
+        if(cal_list.hasChildNodes){
+            cal_list.removeChild(cal_list.lastChild);
+            if(n>0){
+                n -= 1;
+            }
+        }   
+    });
+
+    var reset = document.createElement('button');
+    reset.innerText = 'Reset All';
+    reset.addEventListener('click', function(){
+        localStorage.clear();
+        alert('모든 계산기가 초기화 되었습니다.');
+        n = 0;
+        document.body.removeChild(cal_list);
+        /*
+        while(cal_list.hasChildNodes()){
+            cal_list.removeChild(cal_list.firstChild);
+        }
+        */
+        document.body.appendChild(cal_list);
+    });
+    
+    div1.appendChild(but);
+    div1.appendChild(remove);
+    div1.appendChild(reset);    
+
 </script>
 </html>

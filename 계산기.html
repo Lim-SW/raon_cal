@@ -2,7 +2,15 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title> 라온계산기 </title >
+  <title> 임석원 </title >
+
+  <style>
+    #div,#div2,#div3{ display:list-item; border: 2px solid gray; text-align: center;}
+    #div0{border: 2px solid gray; text-align: left;}
+    #div4{border: 2px solid gray; text-align: left; height: 10cm; overflow:auto;}
+    #screen{text-align: right;}
+    #container{position:absolute; width: 10cm;}
+  </style>
 </head>
 
 <body>
@@ -19,15 +27,13 @@
   var pmflag=0;
   var input = '';
   var numbers = new Array();
-  // 여기에 screen.innerText / full.innerText / div3의 child들
+  // 여기에 screen.innerText / full.innerText / div4의 child들(text로 가져오자)
 
   function cal() { // = 입력시 계산
-    //alert(flag + '\n' + numbers + '\n' + sachic)
     if(numbers.length == 0){
       // 아무것도 안함
     }
-    else if(flag == 1){
-      //alert(1 + '\n' + flag + '\n' + numbers + '\n' + sachic + '\n' + calflag)
+    else if(flag == 1){ // 같은수 같은부호 반복 계산
       var cal_result;
       switch(last_s){
         case '+':
@@ -46,7 +52,8 @@
           alert('switch error1');
       }
 
-      if(calflag == 0){
+      // 계산기록
+      if(calflag == 0){ // 처음 반복계산
         const line1 = document.createElement('h4');
         line1.innerText = full.innerText + last_n;
         const line2 = document.createElement('h2');
@@ -56,7 +63,7 @@
         div4.prepend(line2);
         div4.prepend(line1);
       }
-      else{
+      else{ // 두번째 이후
         const line1 = document.createElement('h4');
         line1.innerText = '☞'+numbers[0] + last_s + last_n;
         const line2 = document.createElement('h2');
@@ -75,13 +82,8 @@
       num = '';
       flag = 1;
       calflag = 1;
-      //alert(flag +'\n'+ calflag +'\n'+ numbers);
     }
-    else{
-      //alert(2 + '\n' + flag + '\n' + numbers + '\n' + sachic + '\n' + calflag)
-      //last_n = screen.innerText;
-      //last_s = sachic[0];
-      //alert(last_n +'\n'+ last_s)
+    else{ // 정상계산
       var cal_result;
       switch(last_s){
         case '+':
@@ -100,6 +102,7 @@
           alert('switch error2');
       }
       
+      // 계산기록
       const line1 = document.createElement('h4');
       line1.innerText = full.innerText + screen.innerText;
       const line2 = document.createElement('h2');
@@ -124,13 +127,10 @@
       num = '';
       flag = 0;
       calflag = 1;
-      //last_s = sachic[0];
-      //alert(flag + '\n' + numbers + '\n' + sachic + '\n' + calflag)
     }
   }
 
   function SACHIC(thing) { // 나머지 사칙연산
-    //alert(flag + '\n' + numbers + '\n' + thing + '\n' + calflag + '\n' + pmflag)
     if((screen.innerText == '0' && thing == '-') || screen.innerText == '-'){ // 맨 처음 음수
       screen.innerText = '-';
       input = '-';
@@ -139,8 +139,7 @@
     }
 
     if(flag == 1 && screen.innerText != 0 && calflag != 1){ // 부호만 바꿀 때
-      alert(1);
-      //sachic[sachic.length-1] = thing;
+      //alert(1);
       full.innerText = full.innerText.substring(0, full.innerText.length-1);
       full.innerText += thing;
       input = '';
@@ -148,16 +147,13 @@
     }
 
     else if(calflag == 1){ // cal 돌고 왔을때
-      alert(2);
-      //alert(flag + '\n' + numbers + '\n' + sachic + '\n' + calflag);
+      //alert(2);
       if(numbers.length == 0){
         // 아무것도 안함
       }
       else{
-        //full.innerText = full.innerText.substring(0, full.innerText.length-1);
         if(pmflag == 1){
           numbers[0] = screen.innerText;
-          //alert(numbers[0]);
           pmflag = 0;
         }
         if(numbers[0]!=screen.innerText){
@@ -174,17 +170,15 @@
     }
 
     else if(flag == 1 && numbers.length != 0){ // 계산하다가 = 입력 후
-      alert(3);
+      //alert(3);
       full.innerText += screen.innerText+thing;
-      //numbers.push(screen.innerText);
       input = '';
       flag = 1;
       last_s = thing;
-      //alert(flag + '\n' + numbers + '\n' + sachic + '\n' + calflag)
     }
 
     else{ // 부호가 아니고 넣을 때
-      alert(4);
+      //alert(4);
       if(screen.innerText[screen.innerText.length-1]=='.'){
         screen.innerText = screen.innerText.replace('.','');
       }
@@ -192,7 +186,6 @@
         if(numbers.length == 0) {
           numbers[numbers.length-1] = screen.innerText;
           full.innerText += screen.innerText+thing;
-          //last_n = screen.innerText;
           last_s = thing;
           input = '';
           flag = 1;
@@ -200,7 +193,6 @@
         else{
           numbers.push(screen.innerText);
           full.innerText += screen.innerText+thing;
-          //last_n = screen.innerText;
           last_s = thing;
           input = '';
           flag = 1;
@@ -209,7 +201,6 @@
       else{
         numbers.push(screen.innerText);
         full.innerText += screen.innerText+thing;
-        //last_n = screen.innerText;
         last_s = thing;
         input = '';
         flag = 1;
@@ -217,14 +208,11 @@
     }
 
     if(numbers.length>=2){ // 집어넣었는데 넘버가 두개 이상일 때 = 계산
-      alert(5);
-      //alert(3 + '\n' + flag + '\n' + numbers + '\n' + sachic + '\n' + calflag)
+      //alert(5);
       var sachic_result;
       const first = numbers[0];
       const second = numbers[1];
       numbers = new Array();
-      //const first_s = sachic[0];
-      //const second_s = sachic[1];
       switch(last_s){
         case '+':
           sachic_result = +(parseFloat(first) + parseFloat(second)).toFixed(12);
@@ -243,15 +231,13 @@
       }
       screen.innerText = sachic_result;
       numbers.push(sachic_result);
-      //sachic.push(second_s);
       flag = 1;
       num = '';
       last_s = thing;
     }
 
     if(pmflag == 1 && numbers.length == 0){ // 음수 누르고 바로계산 할 때
-      alert(6);
-      //alert(flag + '\n' + numbers + '\n' + sachic + '\n' + calflag)
+      //alert(6);
       var sachic_result;
       const first = numbers[0];
       const second = screen.innerText;
@@ -275,7 +261,6 @@
       }
       screen.innerText = sachic_result;
       numbers.push(sachic_result);
-      //sachic.push(first_s);
       flag = 1;
       num = '';
       pmflag=0;
@@ -323,28 +308,40 @@
   }
 
   function PM(){ // 현재 숫자 음수로
-    if(screen.textContent!=0){
+    if(screen.innerText != 0 && screen.innerText != '-'){
       screen.innerText *= -1
       input = screen.innerText;
       flag = 0;
       last_n = screen.innerText;
       pmflag = 1;
     }
+    else if(input == '-'){
+      screen.innerText = 0;
+      input = '';
+      flag = 0;
+      last_n = screen.innerText;
+      pmflag = 0
+    }
+    else{
+      screen.innerText = '-';
+      input = '-';
+      flag = 0;
+      return 0;
+    }
   }
 
   function SAVE(){
-    localStorage.setItem('flag', flag);
-    localStorage.setItem('calflag', calflag);
-    localStorage.setItem('last_n', last_n);
-    localStorage.setItem('last_s', last_s);
-    localStorage.setItem('num', num);
-    localStorage.setItem('pmflag', pmflag);
-    localStorage.setItem('input', input);
-    localStorage.setItem('numbers', JSON.stringify(numbers));
+    localStorage.setItem(window.name+' flag', flag);
+    localStorage.setItem(window.name+' calflag', calflag);
+    localStorage.setItem(window.name+' last_n', last_n);
+    localStorage.setItem(window.name+' last_s', last_s);
+    localStorage.setItem(window.name+' num', num);
+    localStorage.setItem(window.name+' pmflag', pmflag);
+    localStorage.setItem(window.name+' input', input);
+    localStorage.setItem(window.name+' numbers', JSON.stringify(numbers));
 
-    localStorage.setItem('screen', screen.innerText);
-    localStorage.setItem('full', full.innerText);
-    //var log = document.getElementsByClassName('log')[0].innerText;
+    localStorage.setItem(window.name+' screen', screen.innerText);
+    localStorage.setItem(window.name+' full', full.innerText);
     var dap = document.getElementsByTagName('h2');
     var sik = document.getElementsByTagName('h4');
     var dap_arr = new Array();
@@ -357,39 +354,63 @@
       sik_arr.push(sik[i].innerText);
     }
     //console.log(dap_arr.length)
-    localStorage.setItem('dap', JSON.stringify(dap_arr));
-    localStorage.setItem('sik', JSON.stringify(sik_arr))
+    localStorage.setItem(window.name+' dap', JSON.stringify(dap_arr));
+    localStorage.setItem(window.name+' sik', JSON.stringify(sik_arr))
     alert('저장완료!')
   }
 
   function UNSAVE(){
-    localStorage.clear();
+    localStorage.removeItem(window.name+' flag');
+    localStorage.removeItem(window.name+' calflag');
+    localStorage.removeItem(window.name+' last_n');
+    localStorage.removeItem(window.name+' last_s');
+    localStorage.removeItem(window.name+' num');
+    localStorage.removeItem(window.name+' pmflag');
+    localStorage.removeItem(window.name+' input');
+    localStorage.removeItem(window.name+' numbers');
+
+    localStorage.removeItem(window.name+' screen');
+    localStorage.removeItem(window.name+' full');
+    localStorage.removeItem(window.name+' dap');
+    localStorage.removeItem(window.name+' sik')
     AC();
     alert('초기화완료!')
   }
 
   // 계산 화면
+  var container = document.createElement('container');
+  container.id = 'container';
+  document.body.appendChild(container);
+  
+  var div0 = document.createElement('div');
+  div0.id = 'div0';
+  container.appendChild(div0);
+
   var full = document.createElement('h3');
   full.innerText = '☞ ';
-  document.body.appendChild(full);
-  
+  full.id = 'full';
+  div0.appendChild(full);
+
   var screen = document.createElement('h1');
   screen.id = 'screen';
   screen.innerText = '0';
-  document.body.appendChild(screen);
+  div0.appendChild(screen);
 
-  // 임시틀
   var div = document.createElement('div');
   var div2 = document.createElement('div'); 
-  document.body.appendChild(div);
-  document.body.appendChild(div2);
+  div.id = 'div';
+  div2.id = 'div2';
+  container.appendChild(div);
+  container.appendChild(div2);
 
   //계산저장공간
   var div3 =  document.createElement('div');
-  document.body.appendChild(div3);  
   var div4 =  document.createElement('div');
+  div3.id = 'div3';
+  div4.id = 'div4';
   div4.className = 'log';
-  document.body.appendChild(div4);
+  container.appendChild(div4);
+  container.appendChild(div3); 
 
   // 사칙연산 버튼
   var plus = document.createElement('button');
@@ -490,7 +511,7 @@
       C();
     }
     else if(event.keyCode==27){
-      AC();
+      CE();
     }
     else if(event.keyCode==107){
       SACHIC(plus.textContent);
@@ -510,69 +531,69 @@
   }
 
   // 저장되어있으면 불러오기
-  if(localStorage.getItem('flag')){
-    flag = localStorage.getItem('flag');
+  if(localStorage.getItem(window.name+' flag')){
+    flag = localStorage.getItem(window.name+' flag');
   }
   else{
     flag = '0';
   }
-  if(localStorage.getItem('calflag')){
-    calflag = localStorage.getItem('calflag');
+  if(localStorage.getItem(window.name+' calflag')){
+    calflag = localStorage.getItem(window.name+' calflag');
   }
   else{
     calflag = '0';
   }
-  if(localStorage.getItem('last_n')){
-    last_n = localStorage.getItem('last_n');
+  if(localStorage.getItem(window.name+' last_n')){
+    last_n = localStorage.getItem(window.name+' last_n');
   }
   else{
     last_n = '0';
   }
-  if(localStorage.getItem('last_s')){
-    last_s = localStorage.getItem('last_s');
+  if(localStorage.getItem(window.name+' last_s')){
+    last_s = localStorage.getItem(window.name+' last_s');
   }
   else{
     last_s = '0';
   }
-  if(localStorage.getItem('num')){
-    num = localStorage.getItem('num');
+  if(localStorage.getItem(window.name+' num')){
+    num = localStorage.getItem(window.name+' num');
   }
   else{
    num = '';
   }
-  if(localStorage.getItem('pmflag')){
-    pmflag = localStorage.getItem('pmflag');
+  if(localStorage.getItem(window.name+' pmflag')){
+    pmflag = localStorage.getItem(window.name+' pmflag');
   }
   else{
     pmflag = '0';
   }
-  if(localStorage.getItem('input')){
-    input = localStorage.getItem('input');
+  if(localStorage.getItem(window.name+' input')){
+    input = localStorage.getItem(window.name+' input');
   }
   else{
     input = '';
   }
-  if(localStorage.getItem('numbers')){
-    numbers = JSON.parse(localStorage.getItem('numbers'));
+  if(localStorage.getItem(window.name+' numbers')){
+    numbers = JSON.parse(localStorage.getItem(window.name+' numbers'));
   }
   else{
     numbers = new Array;
   }
-  if(localStorage.getItem('screen')){
-    screen.innerText = localStorage.getItem('screen');
+  if(localStorage.getItem(window.name+' screen')){
+    screen.innerText = localStorage.getItem(window.name+' screen');
   }
   else{
     screen.innerText = '0';
   }
-  if(localStorage.getItem('full')){
-    full.innerText = localStorage.getItem('full');
+  if(localStorage.getItem(window.name+' full')){
+    full.innerText = localStorage.getItem(window.name+' full');
   }
   else{
     full.innerText = '☞ ';
   }
-  if(localStorage.getItem('dap') || localStorage.getItem('sik')){
-    var dap = JSON.parse(localStorage.getItem('dap'));
-    var sik = JSON.parse(localStorage.getItem('sik'));
+  if(localStorage.getItem(window.name+' dap') || localStorage.getItem(window.name+' sik')){
+    var dap = JSON.parse(localStorage.getItem(window.name+' dap'));
+    var sik = JSON.parse(localStorage.getItem(window.name+' sik'));
     for(var i=dap.length-1;i>=0;i--){
       //console.log(dap.length, i)
       var log1 = document.createElement('h2');
