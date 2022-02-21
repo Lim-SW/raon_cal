@@ -60,9 +60,20 @@
         */
         document.body.appendChild(cal_list);
     });
+
+    var clear = document.createElement('button');
+    clear.innerText = 'Clear All';
+    clear.addEventListener('click', function(){
+        while(cal_list.hasChildNodes()){
+            cal_list.removeChild(cal_list.firstChild);
+        }
+        alert('생성한 모든 계산기를 숨겼습니다.');
+        n = 0;
+    });
     
     div1.appendChild(but);
     div1.appendChild(remove);
+    div1.appendChild(clear);
     div1.appendChild(reset);    
 
 </script>
