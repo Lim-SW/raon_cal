@@ -14,7 +14,7 @@ class LSWCal {
         // 버튼들...??
     }
 
-    init(){
+    init(){ // 객체 생성시 main에 계산기 추가
         var but = document.createElement('button');
         but.innerText = 'RaonWizCal'+this.id;
         but.addEventListener('click', function(){
