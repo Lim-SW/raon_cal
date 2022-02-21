@@ -13,7 +13,9 @@
         #container{position:absolute; width: 10cm;}
     </style>
 </head>
+
 <body>
+    <!-- DO NOT USE HTML -->
 </body>
 
 <script>
@@ -51,14 +53,6 @@
     reset.addEventListener('click', function(){
         localStorage.clear();
         alert('모든 계산기가 초기화 되었습니다.');
-        n = 0;
-        document.body.removeChild(cal_list);
-        /*
-        while(cal_list.hasChildNodes()){
-            cal_list.removeChild(cal_list.firstChild);
-        }
-        */
-        document.body.appendChild(cal_list);
     });
 
     var clear = document.createElement('button');
