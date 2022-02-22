@@ -2,8 +2,18 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>메인</title>
-    <script type="text/javascript" src="계산기.js"></script>
+    <title>RaonWizCal_Main_임석원</title>
+    <script type="text/javascript" src="RaonwizCal_LSW.js"></script>
+
+    <style>
+        .div1{display:list-item; border: 2px solid gray; text-align: center;}
+        .div0{border: 2px solid gray; text-align: left;}
+        .log{border: 2px solid gray; text-align: left; height: 10cm; overflow:auto;}
+        h1{text-align: right;}
+        .container{width: 10cm;}
+        .div2{list-style:none;display: flex;}
+    </style>
+
 </head>
 
 <body>
@@ -17,11 +27,13 @@
         n = parseInt(localStorage.getItem('n'));
     }
 
+    //console.log(document.body.childNodes);
     var div1 = document.createElement('div'); // 메인의 기능 버튼 구역
     document.body.appendChild(div1);
 
     var cal_list = document.createElement('div'); // 생성된 계산기 구역
     cal_list.id = 'cal_list';
+    cal_list.className = 'div2'
     document.body.appendChild(cal_list);
 
     var but = document.createElement('button'); // 계산기 생성버튼
@@ -29,7 +41,7 @@
     but.addEventListener('click', function(){
         var lsw = new LSWCal(n);
         lsw.init();
-        n += 1;   
+        n += 1;
     });
 
     var remove = document.createElement('button'); // 계산기 숨기기 버튼
@@ -40,7 +52,7 @@
             if(n>0){
                 n -= 1;
             }
-        }   
+        } 
     });
 
     var reset = document.createElement('button'); // 모든 계산기 저장 초기화 버튼
