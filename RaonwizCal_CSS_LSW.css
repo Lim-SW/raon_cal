@@ -1,0 +1,6 @@
+.div1{display:list-item; border: 2px solid gray; text-align: center;}
+.div0{border: 2px solid gray; text-align: left;}
+.log{border: 2px solid gray; text-align: left; height: 10cm; overflow:auto;}
+h1{text-align: right;}
+.container{width: 10cm;}
+.div2{list-style:none;display: flex;}

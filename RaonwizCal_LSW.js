@@ -254,7 +254,13 @@ class LSWCal {
           this.setFlag(0);
           this.setCalflag(0);
         }
+        if(document.getElementById('dp'+this.id).innerText == '0' && BN == 0){
+          this.setInput('');  
+        }
         this.setInput(this.getInput()+BN);
+        if(this.getInput()[0]=='0' && this.getInput().length > 1){
+          this.setInput(this.getInput().substring(1));
+        }
         document.getElementById('dp'+this.id).innerText = this.getInput();
         this.setLast_n(document.getElementById('dp'+this.id).innerText);
 
