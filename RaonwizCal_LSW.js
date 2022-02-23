@@ -650,7 +650,7 @@ class LSWCal {
     AC(){ // 현재 숫자 0으로 + 저장결과 초기화
       var dp = document.getElementById('dp'+this.id);
       var full = document.getElementById('full'+this.id);
-      var div4 = document.getElementById('div4'.this.id);
+      var div4 = document.getElementById('div4'+this.id);
         this.setNumbers(new Array());
         dp.value = '0';
         this.setInput('');

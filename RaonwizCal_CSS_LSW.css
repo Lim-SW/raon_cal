@@ -2,6 +2,6 @@
 .div0{border: 2px solid gray;}
 .log{border: 2px solid gray; text-align: left; height: 10cm; overflow:auto;}
 .full{text-align: left;}
-input{ime-mode:disabled;text-align: right; width:96%; height:1cm; font-size: 20pt;  border: 0; outline: none; background-color: rgb(233, 233, 233);}
+input{ime-mode:inactive;text-align: right; width:96%; height:1cm; font-size: 20pt;  border: 0; outline: none; background-color: rgb(233, 233, 233);}
 .container{width: 10cm;}
 .div2{list-style:none;display: flex;}
