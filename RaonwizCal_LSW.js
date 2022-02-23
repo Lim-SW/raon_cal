@@ -69,7 +69,6 @@ class LSWCal {
 
 
     init(){ // 객체 생성시 main에 계산기 추가
-        console.log(this)
         var lsw = this // 함수용으로 선언
         var cal_list = document.getElementById('cal_list'); // 계산기 붙힐곳
 
@@ -88,9 +87,11 @@ class LSWCal {
         full.id = 'full'+this.id;
         div0.appendChild(full);
 
-        var dp = document.createElement('h1'); // 입력값 및 결과값 받는부분
+        var dp = document.createElement('input'); // 입력값 및 결과값 받는부분
         dp.id = 'dp'+this.id;
-        dp.innerText = '0';
+        //dp.type = 'number'
+        //dp.readOnly = true;
+        dp.value = '0';
         div0.appendChild(dp);
 
         var div = document.createElement('div'); // 사칙연산 틀
@@ -192,22 +193,36 @@ class LSWCal {
           (function(m){ button_num.addEventListener('click', function(){ lsw.BC(m) }) })(b);
         }
 
-        // 저장되어있으면 불러오기 // 중복로직 줄이기
-        var item = [' flag',' calflag',' last_n',' last_s',' num',' pmflag',' input'];
-
-        for(var i in item){
-          if(localStorage.getItem(String(this.getId())+item[i])){
-            this.setFlag(localStorage.getItem(String(this.getId())+item[i]));
-          }
+        // 저장되어있으면 불러오기
+        if(localStorage.getItem(String(this.getId())+' flag')){
+          this.setFlag(localStorage.getItem(String(this.getId())+' flag'));
+        }
+        if(localStorage.getItem(String(this.getId())+' calflag')){
+          this.setCalflag(localStorage.getItem(String(this.getId())+' calflag'));
+        }
+        if(localStorage.getItem(String(this.getId())+' last_n')){
+          this.setLast_n(localStorage.getItem(String(this.getId())+' last_n'));
+        }
+        if(localStorage.getItem(String(this.getId())+' last_s')){
+          this.setLast_s(localStorage.getItem(String(this.getId())+' last_s'));
+        }
+        if(localStorage.getItem(String(this.getId())+' num')){
+          this.setNum(localStorage.getItem(String(this.getId())+' num'));
+        }
+        if(localStorage.getItem(String(this.getId())+' pmflag')){
+          this.setPmflag(localStorage.getItem(String(this.getId())+' pmflag'));
+        }
+        if(localStorage.getItem(String(this.getId())+' input')){
+          this.setInput(localStorage.getItem(String(this.getId())+' input'));
         }
         if(localStorage.getItem(String(this.getId())+' numbers')){
             this.setNumbers(JSON.parse(localStorage.getItem(String(this.getId())+' numbers')));
         }
         if(localStorage.getItem(String(this.getId())+' dp')){
-            document.getElementById('dp'+this.id).innerText = localStorage.getItem(String(this.getId())+' dp');
+            dp.value = localStorage.getItem(String(this.getId())+' dp');
         }
         if(localStorage.getItem(String(this.getId())+' full')){
-            document.getElementById('full'+this.id).innerText = localStorage.getItem(String(this.getId())+' full');
+            full.innerText = localStorage.getItem(String(this.getId())+' full');
         }
         if(localStorage.getItem(String(this.getId())+' dap') || localStorage.getItem(String(this.getId())+' sik')){
             var dap = JSON.parse(localStorage.getItem(String(this.getId())+' dap'));
@@ -215,58 +230,122 @@ class LSWCal {
             for(var i=dap.length-1;i>=0;i--){
             var log1 = document.createElement('h2');
             log1.innerText = dap[i];
-            document.getElementById('div4'+this.id).prepend(log1);
+            div4.prepend(log1);
             var log2 = document.createElement('h4');
             log2.innerText = sik[i];
-            document.getElementById('div4'+this.id).prepend(log2);
+            div4.prepend(log2);
             }
         }
         else{
             var log = document.createElement('p');
             log.innerText = '';
-            document.getElementById('div4'+this.id).appendChild(log);
+            div4.appendChild(log);
         }
+
+        console.log(this);
+        
+        dp.onkeydown = function() {
+          var id = this.id.replace('dp','');
+          var key = event.keyCode;
+          if(((event.keyCode>=48) && (event.keyCode<=57)) || ((event.keyCode>=96) && (event.keyCode<=105))){ // 48~57, 96~105
+            if(lsw.getFlag() == 1){
+              dp.value = '';
+              lsw.setFlag(0);
+            }
+            if(lsw.getCalflag() == 1){
+              full.innerText = '☞';
+              dp.value = '';
+              lsw.setNumbers(new Array());
+              lsw.setFlag(0);
+              lsw.setCalflag(0);
+            }
+            if (key == 96){
+              key = 48;
+            }
+            else if(key>=97){
+              key -= 48;
+            }
+            if(dp.value == '0'){
+              dp.value = '';
+            }
+            lsw.setInput(lsw.getInput() + String.fromCharCode(key));    
+            lsw.setLast_n(lsw.getInput());
+          }
+          else if(event.keyCode==8){
+            lsw.C_KEY();
+          }
+          else if(event.keyCode==27){
+            lsw.CE();
+          }
+          else if(event.keyCode==107){
+            lsw.SACHIC('+');
+          }
+          else if(event.keyCode==109 || event.keyCode==189){
+            lsw.SACHIC('-');
+          }
+          else if(event.keyCode==106){
+            lsw.SACHIC('*');
+          }
+          else if(event.keyCode==111){
+            lsw.SACHIC('/');
+          }
+          else if(event.keyCode==13){
+            lsw.cal();
+          }
+
+          else{
+            this.value = this.value.replace(/[^0-9]/g,'');
+            return false;
+          }
+        }
+      
     }
 
     JUM(){ // 소숫점
-        if(document.getElementById('dp'+this.id).innerText.split('.').length-1 == 0){
-          if(document.getElementById('dp'+this.id).innerText=='0'){
+      var dp = document.getElementById('dp'+this.id);
+        if(dp.value.split('.').length-1 == 0){
+          if(dp.value=='0'){
             this.setInput(0);
           }
-          else if(document.getElementById('dp'+this.id).innerText.length != 0){
-            this.setInput(document.getElementById('dp'+this.id).innerText);
+          else if(dp.value.length != 0){
+            this.setInput(dp.value);
           }
           
           this.setInput(this.getInput() + '.');
-          document.getElementById('dp'+this.id).innerText = this.getInput();
+          dp.value = this.getInput();
         }
     }
 
     BC(BN){ // 버튼 이벤트
+      var dp = document.getElementById('dp'+this.id);
+      var full = document.getElementById('full'+this.id);
         if(this.getFlag() == 1){
-          document.getElementById('dp'+this.id).innerText = '';
+          dp.value = '';
           this.setFlag(0);
         }
         if(this.getCalflag() == 1){
-          document.getElementById('full'+this.id).innerText = '☞';
-          document.getElementById('dp'+this.id).innerText = '';
+          full.innerText = '☞';
+          dp.value = '';
           this.setNumbers(new Array());
           this.setFlag(0);
           this.setCalflag(0);
         }
-        if(document.getElementById('dp'+this.id).innerText == '0' && BN == 0){
+        if(dp.value == '0' && BN == 0){
           this.setInput('');  
         }
         this.setInput(this.getInput()+BN);
         if(this.getInput()[0]=='0' && this.getInput().length > 1){
           this.setInput(this.getInput().substring(1));
         }
-        document.getElementById('dp'+this.id).innerText = this.getInput();
-        this.setLast_n(document.getElementById('dp'+this.id).innerText);
+        dp.value = this.getInput();
+        this.setLast_n(dp.value);
 
     }
 
     cal() { // = 입력시 계산
+      var dp = document.getElementById('dp'+this.id);
+      var full = document.getElementById('full'+this.id);
+      var div4 = document.getElementById('div4'+this.id);
         if(this.getNumbers().length == 0){
           // 아무것도 안함
         }
@@ -292,13 +371,13 @@ class LSWCal {
           // 계산기록
           if(this.getCalflag() == 0){ // 처음 반복계산
             var line1 = document.createElement('h4');
-            line1.innerText = document.getElementById('full'+this.id).innerText + this.getLast_n();
+            line1.innerText = full.innerText + this.getLast_n();
             var line2 = document.createElement('h2');
             line2.innerText = cal_result;
             line1.className = 'sik';
             line2.className = 'dap';
-            document.getElementById('div4'+this.id).prepend(line2);
-            document.getElementById('div4'+this.id).prepend(line1);
+            div4.prepend(line2);
+            div4.prepend(line1);
           }
           else{ // 두번째 이후
             var line1 = document.createElement('h4');
@@ -307,12 +386,12 @@ class LSWCal {
             line2.innerText = cal_result;
             line1.className = 'sik';
             line2.className = 'dap';
-            document.getElementById('div4'+this.id).prepend(line2);
-            document.getElementById('div4'+this.id).prepend(line1);
+            div4.prepend(line2);
+            div4.prepend(line1);
           }
 
-          document.getElementById('dp'+this.id).innerText = cal_result;
-          document.getElementById('full'+this.id).innerText = '☞'+this.getNumbers()[0] + this.getLast_s() + this.getLast_n();
+          dp.value = cal_result;
+          full.innerText = '☞'+this.getNumbers()[0] + this.getLast_s() + this.getLast_n();
           var tempArr = new Array();
           tempArr.push(cal_result);
           this.setNumbers(tempArr);
@@ -342,22 +421,22 @@ class LSWCal {
 
           // 계산기록
           var line1 = document.createElement('h4');
-          line1.innerText = document.getElementById('full'+this.id).innerText + document.getElementById('dp'+this.id).innerText;
+          line1.innerText = full.innerText + dp.value;
           var line2 = document.createElement('h2');
           line2.innerText = cal_result;
 
-          document.getElementById('dp'+this.id).innerText = cal_result;
+          dp.value = cal_result;
           if(this.getCalflag() == 1){
-            document.getElementById('full'+this.id).innerText = '☞'+this.getNumbers()[0] + this.getLast_s() + this.getLast_n();
-            line1.innerText = document.getElementById('full'+this.id).innerText;
+            full.innerText = '☞'+this.getNumbers()[0] + this.getLast_s() + this.getLast_n();
+            line1.innerText = full.innerText;
           }
           else{
-            document.getElementById('full'+this.id).innerText = '☞';
+            full.innerText = '☞';
           }
           line1.className = 'sik';
           line2.className = 'dap';
-          document.getElementById('div4'+this.id).prepend(line2);
-          document.getElementById('div4'+this.id).prepend(line1);
+          div4.prepend(line2);
+          div4.prepend(line1);
 
           var tempArr = new Array();
           tempArr.push(cal_result);
@@ -370,17 +449,19 @@ class LSWCal {
       }
 
     SACHIC(thing) { // 나머지 사칙연산
-        if((document.getElementById('dp'+this.id).innerText == '0' && thing == '-') || document.getElementById('dp'+this.id).innerText == '-'){ // 맨 처음 음수
-          document.getElementById('dp'+this.id).innerText = '-';
+      var dp = document.getElementById('dp'+this.id);
+      var full = document.getElementById('full'+this.id);
+        if((dp.value == '0' && thing == '-') || dp.value == '-'){ // 맨 처음 음수
+          dp.value = '-';
           this.setInput('-');
           this.setFlag(1);
           return 0;
         }
 
-        if(this.getFlag() == 1 && document.getElementById('dp'+this.id).innerText != 0 && this.getCalflag() != 1){ // 부호만 바꿀 때
+        if(this.getFlag() == 1 && dp.value != 0 && this.getCalflag() != 1){ // 부호만 바꿀 때
           //alert(1);
-          document.getElementById('full'+this.id).innerText = document.getElementById('full'+this.id).innerText.substring(0, document.getElementById('full'+this.id).innerText.length-1);
-          document.getElementById('full'+this.id).innerText += thing;
+          full.innerText = full.innerText.substring(0, full.innerText.length-1);
+          full.innerText += thing;
           this.setInput('');
         }
 
@@ -392,17 +473,17 @@ class LSWCal {
           else{
             if(this.getPmflag() == 1){
                 var tempArr = this.getNumbers();
-                tempArr[0] = document.getElementById('dp'+this.id).innerText;
+                tempArr[0] = dp.value;
                 this.setNumbers(tempArr);
                 this.setPmflag(0);
             }
-            if(this.getNumbers()[0]!=document.getElementById('dp'+this.id).innerText){
+            if(this.getNumbers()[0]!=dp.value){
                 var tempArr = this.getNumbers();
-                tempArr[0] = document.getElementById('dp'+this.id).innerText;
+                tempArr[0] = dp.value;
                 this.setNumbers(tempArr);
             }
-            document.getElementById('full'+this.id).innerText = '☞'+this.getNumbers()[0];
-            document.getElementById('full'+this.id).innerText += thing;
+            full.innerText = '☞'+this.getNumbers()[0];
+            full.innerText += thing;
             this.setInput('');
             this.setCalflag(0);
             this.setFlag(1);
@@ -412,41 +493,51 @@ class LSWCal {
 
         else if(this.getFlag() == 1 && this.getNumbers().length != 0){ // 계산하다가 = 입력 후
           //alert(3);
-          document.getElementById('full'+this.id).innerText += document.getElementById('dp'+this.id).innerText+thing;
+          full.innerText += dp.value+thing;
           this.setInput('');
           this.setFlag(1);
         }
 
         else{ // 부호가 아니고 넣을 때
-          //alert(4); 
-          if(document.getElementById('dp'+this.id).innerText[document.getElementById('dp'+this.id).innerText.length-1]=='.'){
-            document.getElementById('dp'+this.id).innerText = document.getElementById('dp'+this.id).innerText.replace('.','');
+          //alert(4);
+          if(dp.value[dp.value.length-1]=='.'){
+            dp.value = dp.value.replace('.','');
           }
           if(this.getPmflag()==1 && this.getNumbers().length != 0){
             if(this.getNumbers().length == 0) {
               var tempArr = this.getNumbers();
-              tempArr[tempArr.length-1] = document.getElementById('dp'+this.id).innerText;
+              tempArr[tempArr.length-1] = dp.value;
               this.setNumbers(tempArr);
-              document.getElementById('full'+this.id).innerText += document.getElementById('dp'+this.id).innerText+thing;
+              full.innerText += dp.value+thing;
               this.setInput('');
               this.setFlag(1);
             }
             else{
               var tempArr = this.getNumbers();
-              tempArr.push(document.getElementById('dp'+this.id).innerText);
+              tempArr.push(dp.value);
               this.setNumbers(tempArr);
-              document.getElementById('full'+this.id).innerText += document.getElementById('dp'+this.id).innerText+thing;
+              full.innerText += dp.value+thing;
               this.setInput('');
               this.setFlag(1);
             }
           }
           else{
-            var tempArr = this.getNumbers();
-            tempArr.push(document.getElementById('dp'+this.id).innerText);
-            this.setNumbers(tempArr);
-            document.getElementById('full'+this.id).innerText += document.getElementById('dp'+this.id).innerText+thing;
-            this.setInput('');
-            this.setFlag(1);
+            if(full.innerText == '☞'){
+              var tempArr = this.getNumbers();
+              tempArr[0] = dp.value;
+              this.setNumbers(tempArr);
+              full.innerText += dp.value+thing;
+              this.setInput('');
+              this.setFlag(1);
+            }
+            else{
+              var tempArr = this.getNumbers();
+              tempArr.push(dp.value);
+              this.setNumbers(tempArr);
+              full.innerText += dp.value+thing;
+              this.setInput('');
+              this.setFlag(1);
+            }
           }
         }
 
@@ -455,7 +546,7 @@ class LSWCal {
           var first = this.getNumbers()[0];
           var second = this.getNumbers()[1];
           this.setNumbers(new Array());
-          switch(this.getLast_s()){
+          switch(thing){
             case '+':
               sachic_result = +(parseFloat(first) + parseFloat(second)).toFixed(12);
               break;
@@ -471,7 +562,7 @@ class LSWCal {
             default:
               alert('switch error3');
           }
-          document.getElementById('dp'+this.id).innerText = sachic_result;
+          dp.value = sachic_result;
           var tempArr = this.getNumbers();
           tempArr.push(sachic_result);
           this.setNumbers(tempArr);
@@ -483,7 +574,7 @@ class LSWCal {
           //alert(6);
           var sachic_result;
           var first = this.getNumbers()[0];
-          var second = document.getElementById('dp'+this.id).innerText;
+          var second = dp.value;
           this.setNumbers(new Array());
           var first_s = this.getLast_s();
           switch(first_s){
@@ -502,7 +593,7 @@ class LSWCal {
             default:
               alert('switch error4');
           }
-          document.getElementById('dp'+this.id).innerText = sachic_result;
+          dp.value = sachic_result;
           var tempArr = this.getNumbers();
           tempArr.push(sachic_result);
           this.setNumbers(tempArr);
@@ -515,61 +606,82 @@ class LSWCal {
       }
 
     CE() { // 현재 숫자 0으로
+      var dp = document.getElementById('dp'+this.id);
+      var full = document.getElementById('full'+this.id);
         this.setNumbers(new Array());
-        document.getElementById('dp'+this.id).innerText = '0';
+        dp.value = '0';
         this.setInput('');
         this.setNum(0);
-        document.getElementById('full'+this.id).innerText = '☞ ';
+        full.innerText = '☞ ';
         this.setCalflag(0);
         this.setFlag(0);
         this.setPmflag(0);
       }
 
     C() { // 가장 마지막 숫자 지우기
-        if(document.getElementById('dp'+this.id).innerText.length <= 1){
-          document.getElementById('dp'+this.id).innerText = '0';
+      var dp = document.getElementById('dp'+this.id);
+        if(dp.value.length <= 1){
+          dp.value = '0';
           this.setInput('');
         }
         else{
-          this.setNum(document.getElementById('dp'+this.id).innerText);
+          this.setNum(dp.value);
           this.setNum(this.getNum().substring(0, this.getNum().length-1));
-          document.getElementById('dp'+this.id).innerText = this.getNum();
+          dp.value = this.getNum();
+          this.setInput(this.getNum());
+          this.setFlag(0);
+        }
+      }
+    
+    C_KEY() { // 가장 마지막 숫자 지우기 (키로)
+      var dp = document.getElementById('dp'+this.id);
+        if(dp.value.length <= 1){
+          dp.value = '0';
+          this.setInput('');
+        }
+        else{
+          this.setNum(dp.value);
+          this.setNum(this.getNum().substring(0, this.getNum().length-1));
           this.setInput(this.getNum());
           this.setFlag(0);
         }
       }
 
     AC(){ // 현재 숫자 0으로 + 저장결과 초기화
+      var dp = document.getElementById('dp'+this.id);
+      var full = document.getElementById('full'+this.id);
+      var div4 = document.getElementById('div4'.this.id);
         this.setNumbers(new Array());
-        document.getElementById('dp'+this.id).innerText = '0';
+        dp.value = '0';
         this.setInput('');
-        document.getElementById('full'+this.id).innerText = '☞ ';
+        full.innerText = '☞ ';
         this.setCalflag(0);
         this.setFlag(0);
         this.setPmflag(0);
 
-        while(document.getElementById('div4'+this.id).hasChildNodes()){
-          document.getElementById('div4'+this.id).removeChild(document.getElementById('div4'+this.id).firstChild);
+        while(div4.hasChildNodes()){
+          div4.removeChild(div4.firstChild);
         }
       }
 
     PM(){ // 현재 숫자 음수로
-        if(document.getElementById('dp'+this.id).innerText != 0 && document.getElementById('dp'+this.id).innerText != '-'){
-          document.getElementById('dp'+this.id).innerText *= -1
-          this.setInput(document.getElementById('dp'+this.id).innerText);
+      var dp = document.getElementById('dp'+this.id);
+        if(dp.value != 0 && dp.value != '-'){
+          dp.value *= -1
+          this.setInput(dp.value);
           this.setFlag(0);
-          this.setLast_n(document.getElementById('dp'+this.id).innerText);
+          this.setLast_n(dp.value);
           this.setPmflag(1);
         }
         else if(this.getInput('-')){
-          document.getElementById('dp'+this.id).innerText = 0;
+          dp.value = 0;
           this.setInput('');
           this.setFlag(0);
-          this.setLast_n(document.getElementById('dp'+this.id).innerText);
+          this.setLast_n(dp.value);
           this.setPmflag(0);
         }
         else{
-          document.getElementById('dp'+this.id).innerText = '-';
+          dp.value = '-';
           this.setInput('-');
           this.setFlag(0);
           return 0;
@@ -577,6 +689,8 @@ class LSWCal {
       }
     
     SAVE(){ // 진행상황 저장
+      var dp = document.getElementById('dp'+this.id);
+      var container = document.getElementById('container'+this.getId());
         localStorage.setItem(String(this.getId())+' flag', this.getFlag());
         localStorage.setItem(String(this.getId())+' calflag', this.getCalflag());
         localStorage.setItem(String(this.getId())+' last_n', this.getLast_n());
@@ -586,10 +700,10 @@ class LSWCal {
         localStorage.setItem(String(this.getId())+' input', this.getInput());
         localStorage.setItem(String(this.getId())+' numbers', JSON.stringify(this.getNumbers()));
 
-        localStorage.setItem(String(this.getId())+' dp', document.getElementById('dp'+this.id).innerText);
-        localStorage.setItem(String(this.getId())+' full', document.getElementById('full'+this.id).innerText);
-        var dap = document.getElementById('container'+this.getId()).getElementsByTagName('h2');
-        var sik = document.getElementById('container'+this.getId()).getElementsByTagName('h4');
+        localStorage.setItem(String(this.getId())+' dp', dp.value);
+        localStorage.setItem(String(this.getId())+' full', full.innerText);
+        var dap = container.getElementsByTagName('h2');
+        var sik = container.getElementsByTagName('h4');
         var dap_arr = new Array();
         var sik_arr = new Array();
 
@@ -599,9 +713,7 @@ class LSWCal {
         }
         localStorage.setItem(String(this.getId())+' dap', JSON.stringify(dap_arr));
         localStorage.setItem(String(this.getId())+' sik', JSON.stringify(sik_arr))
-        console.log(localStorage)
         alert('저장완료!')
-        console.log(document);
       }
 
     
@@ -612,7 +724,7 @@ class LSWCal {
           localStorage.removeItem(String(this.getId())+item[i]);
         }
         this.AC();
-        alert('초기화완료!')
+        alert('초기화완료!');
       }
 
 }
