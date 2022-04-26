@@ -292,6 +292,10 @@ class LSWCal {
           else if(event.keyCode==13){
             lsw.cal();
           }
+          else if(event.keyCode==110){
+            if(dp.value.indexOf('.')!=-1){dp.value = dp.value.replace('.','')}
+            dp.value = dp.value.replace("..",'.');
+          }
 
           else{
             this.value = this.value.replace(/[^0-9]/g,'');
@@ -691,30 +695,30 @@ class LSWCal {
     SAVE(){ // 진행상황 저장
       var dp = document.getElementById('dp'+this.id);
       var container = document.getElementById('container'+this.getId());
-        localStorage.setItem(String(this.getId())+' flag', this.getFlag());
-        localStorage.setItem(String(this.getId())+' calflag', this.getCalflag());
-        localStorage.setItem(String(this.getId())+' last_n', this.getLast_n());
-        localStorage.setItem(String(this.getId())+' last_s', this.getLast_s());
-        localStorage.setItem(String(this.getId())+' num', this.getNum());
-        localStorage.setItem(String(this.getId())+' pmflag', this.getPmflag());
-        localStorage.setItem(String(this.getId())+' input', this.getInput());
-        localStorage.setItem(String(this.getId())+' numbers', JSON.stringify(this.getNumbers()));
+      var full = document.getElementById('full'+this.id);
+      localStorage.setItem(String(this.getId())+' flag', this.getFlag());
+      localStorage.setItem(String(this.getId())+' calflag', this.getCalflag());
+      localStorage.setItem(String(this.getId())+' last_n', this.getLast_n());
+      localStorage.setItem(String(this.getId())+' last_s', this.getLast_s());
+      localStorage.setItem(String(this.getId())+' num', this.getNum());
+      localStorage.setItem(String(this.getId())+' pmflag', this.getPmflag());
+      localStorage.setItem(String(this.getId())+' input', this.getInput());
+      localStorage.setItem(String(this.getId())+' numbers', JSON.stringify(this.getNumbers()));
 
-        localStorage.setItem(String(this.getId())+' dp', dp.value);
-        localStorage.setItem(String(this.getId())+' full', full.innerText);
-        var dap = container.getElementsByTagName('h2');
-        var sik = container.getElementsByTagName('h4');
-        var dap_arr = new Array();
-        var sik_arr = new Array();
-
-        for(var i=0;i<dap.length;i++){
-          dap_arr.push(dap[i].innerText);
-          sik_arr.push(sik[i].innerText);
-        }
-        localStorage.setItem(String(this.getId())+' dap', JSON.stringify(dap_arr));
-        localStorage.setItem(String(this.getId())+' sik', JSON.stringify(sik_arr))
-        alert('저장완료!')
+      localStorage.setItem(String(this.getId())+' dp', dp.value);
+      localStorage.setItem(String(this.getId())+' full', full.innerText);
+      var dap = container.getElementsByTagName('h2');
+      var sik = container.getElementsByTagName('h4');
+      var dap_arr = new Array();
+      var sik_arr = new Array();
+      for(var i=0;i<dap.length;i++){
+        dap_arr.push(dap[i].innerText);
+        sik_arr.push(sik[i].innerText);
       }
+      localStorage.setItem(String(this.getId())+' dap', JSON.stringify(dap_arr));
+      localStorage.setItem(String(this.getId())+' sik', JSON.stringify(sik_arr))
+      alert('저장완료!')
+    }
 
     
     UNSAVE(){ // 저장초기화 // 중복로직 줄이기
