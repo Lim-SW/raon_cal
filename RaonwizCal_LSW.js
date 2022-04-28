@@ -294,6 +294,13 @@ class LSWCal {
           }
           else if(event.keyCode==110){
             if(dp.value.indexOf('.')!=-1){dp.value = dp.value.replace('.','')}
+            if(lsw.getInput().indexOf('.')!=-1){
+              lsw.setInput(lsw.getInput().replace('.'));
+              lsw.setInput(lsw.getInput()+'.');
+            }
+            else{
+              lsw.setInput(lsw.getInput()+'.');
+            }
             dp.value = dp.value.replace("..",'.');
           }
 
