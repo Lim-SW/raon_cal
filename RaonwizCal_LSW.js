@@ -67,7 +67,6 @@ class LSWCal {
         this.input = input;
     }
 
-
     init(){ // 객체 생성시 main에 계산기 추가
         var lsw = this // 함수용으로 선언
         var cal_list = document.getElementById('cal_list'); // 계산기 붙힐곳
@@ -457,7 +456,7 @@ class LSWCal {
           this.setFlag(0);
           this.setCalflag(1);
         }
-      }
+    }
 
     SACHIC(thing) { // 나머지 사칙연산
       var dp = document.getElementById('dp'+this.id);
@@ -557,7 +556,7 @@ class LSWCal {
           var first = this.getNumbers()[0];
           var second = this.getNumbers()[1];
           this.setNumbers(new Array());
-          switch(thing){
+          switch(this.last_s){
             case '+':
               sachic_result = +(parseFloat(first) + parseFloat(second)).toFixed(12);
               break;
@@ -614,7 +613,7 @@ class LSWCal {
         }
 
         this.setLast_s(thing);
-      }
+    }
 
     CE() { // 현재 숫자 0으로
       var dp = document.getElementById('dp'+this.id);
@@ -627,7 +626,7 @@ class LSWCal {
         this.setCalflag(0);
         this.setFlag(0);
         this.setPmflag(0);
-      }
+    }
 
     C() { // 가장 마지막 숫자 지우기
       var dp = document.getElementById('dp'+this.id);
@@ -642,7 +641,7 @@ class LSWCal {
           this.setInput(this.getNum());
           this.setFlag(0);
         }
-      }
+    }
     
     C_KEY() { // 가장 마지막 숫자 지우기 (키로)
       var dp = document.getElementById('dp'+this.id);
@@ -656,7 +655,7 @@ class LSWCal {
           this.setInput(this.getNum());
           this.setFlag(0);
         }
-      }
+    }
 
     AC(){ // 현재 숫자 0으로 + 저장결과 초기화
       var dp = document.getElementById('dp'+this.id);
@@ -673,7 +672,7 @@ class LSWCal {
         while(div4.hasChildNodes()){
           div4.removeChild(div4.firstChild);
         }
-      }
+    }
 
     PM(){ // 현재 숫자 음수로
       var dp = document.getElementById('dp'+this.id);
@@ -697,7 +696,7 @@ class LSWCal {
           this.setFlag(0);
           return 0;
         }
-      }
+    }
     
     SAVE(){ // 진행상황 저장
       var dp = document.getElementById('dp'+this.id);
@@ -726,7 +725,6 @@ class LSWCal {
       localStorage.setItem(String(this.getId())+' sik', JSON.stringify(sik_arr))
       alert('저장완료!')
     }
-
     
     UNSAVE(){ // 저장초기화 // 중복로직 줄이기
         var item = [' flag',' calflag',' last_n',' last_s',' num',' pmflag',' input',
@@ -736,6 +734,6 @@ class LSWCal {
         }
         this.AC();
         alert('초기화완료!');
-      }
+    }
 
 }
